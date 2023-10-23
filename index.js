@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import dotenv from 'dotenv';
 dotenv.config();
 import mongoose, {Schema,model} from "mongoose";
@@ -82,7 +82,7 @@ app.delete('/product/:id',async(req,res)=>{
     })
 
 });
-
+//put operation : 
 app.put('/product/:_id', async(req,res)=>{
     const {_id} = req.params;
 
@@ -103,6 +103,44 @@ app.put('/product/:_id', async(req,res)=>{
         data:findUpdate,
         message:`Successfully update product with id ${_id}`
     })
+
+})
+
+app.patch('/product/:_id',async(req,res)=>{
+    const {_id} = req.params;
+
+    const {name,description,price,productImage,highQuality} = req.body;
+
+    const findPrduct = await Product.findById(_id)
+
+    if(name)
+    {
+        findPrduct.name = name;
+    }
+    if(description)
+    {
+        findPrduct.description = description;
+    }
+    if(price)
+    {
+        findPrduct.price = price;
+    }
+    if(highQuality)
+    {
+        findPrduct.highQuality = highQuality;
+    } 
+    if(productImage)
+    {
+        findPrduct.productImage = productImage;
+    }
+
+    const updateData = await findPrduct.save();
+
+    res.json({
+        success:true,
+        data:updateData,
+        message:`Successfully updated specific data in ${_id}`
+ })
 
 })
 
